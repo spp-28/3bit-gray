@@ -1,12 +1,13 @@
 # Tiny Tapeout project information (Wokwi project)
 project:
-  wokwi_id:     0       # Set this to the ID of your Wokwi project (the number from the project's URL)
-  title:        ""      # Project title
-  author:       ""      # Your name
+  wokwi_id:     441536615530340353       # Set this to the ID of your Wokwi project (the number from the project's URL)
+  title:        "Implementation of 3Bit gray counter using D Flip Flop"      # Project title
+  author:       "Shriyanka priya"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""      # One line description of what your project does
+  description:  "A **normal Gray counter** is a sequential counter where each clock pulse changes the state by exactly **one bit** following the Gray code sequence.
+"      # One line description of what your project does
   language:     "Wokwi" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
+  clock_hz:     10000       # Clock frequency in Hz (or 0 if not applicable)
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
   tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
@@ -26,9 +27,9 @@ pinout:
   ui[7]: ""
 
   # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
+  uo[0]: "OUT0"
+  uo[1]: "OUT1"
+  uo[2]: "OUT2"
   uo[3]: ""
   uo[4]: ""
   uo[5]: ""
