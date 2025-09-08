@@ -1,38 +1,66 @@
-![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/wokwi_test/badge.svg) ![](../../workflows/fpga/badge.svg)
+3-bit Gray Counter (D-Flip-Flop Implementation) — matching your diagram
 
-# Tiny Tapeout Wokwi Project Template
+Physical FF mapping in your diagram
 
-- [Read the documentation for project](docs/info.md)
+Lowest (bottom) flip-flop → D0, Q0, Q̅0 (LSB)
 
-## What is Tiny Tapeout?
+Middle flip-flop → D1, Q1, Q̅1
 
-Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
+Upper (top) flip-flop → Q2, D2, Q̅2 (MSB)
 
-To learn more and get started, visit https://tinytapeout.com.
+One-line description
+A synchronous 3-bit Gray code counter implemented with three D flip-flops (bottom→Q0, middle→Q1, top→Q2) and simple combinational logic so that exactly one bit toggles per clock.
 
-## Wokwi Projects
+I/O (suggested / typical wiring)
 
-Edit the [info.yaml](info.yaml) and change the `wokwi_id` to the ID of your Wokwi project. You can find the ID in the URL of your project, it's the big number after `wokwi.com/projects/`.
+Clock → common CLK to all three D-FFs.
 
-The GitHub action will automatically fetch the digital netlist from Wokwi and build the ASIC files.
+Reset (sync or async) → forces Q2 Q1 Q0 = 000.
 
-## Enable GitHub actions to build the results page
+Enable → gate counting (when 0 hold state; when 1 advance).
 
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
+Outputs: connect LEDs to Q0 (bottom), Q1 (middle), Q2 (top).
 
-## Resources
+Next-state Boolean logic (drive D inputs)
 
-- [FAQ](https://tinytapeout.com/faq/)
-- [Digital design lessons](https://tinytapeout.com/digital_design/)
-- [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
-- [Join the community](https://tinytapeout.com/discord)
-- [Build your design locally](https://www.tinytapeout.com/guides/local-hardening/)
+Use these equations to wire the combinational logic feeding the D inputs (consistent with Gray sequence 000→001→011→010→110→111→101→100→000):
 
-## What next?
+D0 = (NOTQ0 NOTQ1) + (Q2 Q1)
 
-- [Submit your design to the next shuttle](https://app.tinytapeout.com/).
-- Edit [this README](README.md) and explain your design, how it works, and how to test it.
-- Share your project on your social network of choice:
-  - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [@TinyTapeout](https://www.linkedin.com/company/100708654/)
-  - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
-  - X (formerly Twitter) [#tinytapeout](https://twitter.com/hashtag/tinytapeout) [@tinytapeout](https://twitter.com/tinytapeout)
+D1 = (Q1 XOR Q0) + (NOTQ2 Q0)
+
+D2 = (Q2 Q0) + (Q1 NOTQ0)
+
+(Implement NOT, XOR, and one AND + XOR for the MSB.)
+
+Truth table (current Q2 Q1 Q0 → next D2 D1 D0)
+Q2	Q1	Q0	D2	D1	D0
+0	  0	  0	  0	  0  	1
+0	  0	  1	  0	  1	  1
+0	  1	  0	  1	  1	  0
+0	  1	  1	  0	  1	  0
+1	  1	  0	  1	  1	  1
+1	  1	  1	  1	  0	  1
+1	  0	  1	  1	  1	  0
+1	  0	  0	  0	  0	  0
+
+(Each row: current state → inputs that should be presented at D2,D1,D0 before the next rising clock.)
+
+Example counting sequence (observed on Q2 Q1 Q0 top→bottom)
+
+000 → 001 → 011 → 010 → 110 → 111 → 101 → 100 → (back to) 000
+Only one bit changes between consecutive states.
+
+Implementation notes (matching your schematic)
+
+Bottom FF output = Q0 → connect to D0 logic: feed Q0 through an inverter to get D0.
+
+Middle FF output = Q1 → feed Q1 and Q0 into XOR gate to produce D1.
+
+Top FF output = Q2 → produce D2 by XORing Q2 with the AND of Q1 and Q0 (D2 = Q2 XOR (Q1 & Q0)).
+
+Use a common clock to the CLK pins on all three D-FFs.
+
+If you have Enable, implement: when Enable=0 force D = Q (hold) — simplest is multiplex each D between next_logic and Q controlled by Enable.
+
+If you have Reset, tie it to FF async or implement synchronous clear to force 000.
