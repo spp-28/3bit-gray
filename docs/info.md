@@ -19,7 +19,7 @@ The flip-flops are mapped as follows in the schematic:
 The next-state equations are:
 
 - D0 = (NOTQ2 NOTQ1) + (Q2 Q1)  
-- D1 = (Q1 ⊕ Q0)  + (NOTQ2 Q0)
+- D1 = (NOTQ2 Q0) + (Q1 NOTQ0)
 - D2 = (Q2 Q0) + (Q1 NOTQ0) 
 
 On each rising edge of the clock, the outputs update according to these equations, producing the 3-bit Gray sequence:
@@ -62,7 +62,7 @@ Inputs → Outputs
 | 010                       | 1 1 0                 | 110                    |
 | 110                       | 1 1 1                 | 111                    |
 | 111                       | 1 0 1                 | 101                    |
-| 101                       | 1 1 0                 | 110                    |
+| 101                       | 1 0 0                 | 100                    |
 | 100                       | 0 0 0                 | 000                    |
 
 ---
