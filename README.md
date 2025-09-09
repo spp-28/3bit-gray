@@ -27,7 +27,7 @@ Use these equations to wire the combinational logic feeding the D inputs (consis
 
 D0 = (NOTQ0 NOTQ1) + (Q2 Q1)
 
-D1 = (Q1 XOR Q0) + (NOTQ2 Q0)
+D1 = (NOTQ2 Q0) + (Q1 NOTQ0)
 
 D2 = (Q2 Q0) + (Q1 NOTQ0)
 
@@ -41,7 +41,7 @@ Q2	Q1	Q0	D2	D1	D0
 0	  1	  1	  0	  1	  0
 1	  1	  0	  1	  1	  1
 1	  1	  1	  1	  0	  1
-1	  0	  1	  1	  1	  0
+1	  0	  1	  1	  0	  0
 1	  0	  0	  0	  0	  0
 
 (Each row: current state → inputs that should be presented at D2,D1,D0 before the next rising clock.)
